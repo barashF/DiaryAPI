@@ -13,3 +13,9 @@ DB_NAME=your_database_name
 # Настройки сервера
 HOST=0.0.0.0
 PORT=8000
+
+# Установка зависимостей
+pip install -r requirements.txt
+
+# Локальный запуск
+python src/main.py

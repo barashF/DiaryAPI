@@ -4,8 +4,14 @@ from contextlib import asynccontextmanager
 import logging
 
 
-config = load_config('/home/vitaly/Рабочий стол/DiaryAPI/.env')
+import os
+from pathlib import Path
 
+
+src_dir = Path(__file__).parent.parent
+env_path = src_dir / ".env"
+
+config = load_config(str(env_path))
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

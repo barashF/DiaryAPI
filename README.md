@@ -1,12 +1,15 @@
-Создать .env в src с полями:
-DB_HOST=
-DB_PORT=
-DB_USER=
-DB_PASSWORD=
-DB_NAME=
+## ⚙️ Настройка окружения
 
-HOST=
-PORT=
+Перед запуском создайте файл `.env` в директории `src/` со следующими параметрами:
 
-Локальный запуск:
-python src/main.py
+```env
+# Настройки базы данных
+DB_HOST=your_database_host
+DB_PORT=your_database_port
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
+DB_NAME=your_database_name
+
+# Настройки сервера
+HOST=0.0.0.0
+PORT=8000

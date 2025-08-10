@@ -1,5 +1,6 @@
 from asyncpg import Connection
 from fastapi import HTTPException, status
+from typing import List
 
 from .schemas import EntryCreate, EntryBase, EntryUpdate, Entry
 
@@ -40,6 +41,14 @@ class EntryRepository:
             )
         return Entry(**row)
     
+    async def get_all_entries(self) -> List[Entry]:
+        query = """
+            SELECT id, title, content, is_done, created_at
+            FROM entries
+        """
+        rows = await self.db_context.fetch(query)
+        return [Entry(**row) for row in rows]
+
     async def update_entry(self, id_entry: int, entry: EntryUpdate) -> Entry:
         await self.get_entry_by_id(id_entry)
         update_data = entry.model_dump(exclude_unset=True)
@@ -59,6 +68,21 @@ class EntryRepository:
         updated_entry = await self.db_context.fetchrow(query, *params)
         return Entry(**updated_entry)
     
+    async def mark_entry_done(self, id_entry) -> Entry:
+        await self.get_entry_by_id(id_entry)
+
+        query = """
+            UPDATE entries
+            SET is_done = True
+            WHERE id = $1
+            RETURNING id, title, content, is_done, created_at
+        """
+        row = await self.db_context.fetchrow(
+            query,
+            id_entry
+        )
+        return Entry(**row)
+
     async def delete_entry(self, id_entry: int):
         await self.get_entry_by_id(id_entry)
         query = """DELETE FROM entries WHERE id = $1"""

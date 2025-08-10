@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from typing import List
 
 from .schemas import EntryCreate, Entry, EntryUpdate
 from .di import get_entry_repository
@@ -28,6 +29,11 @@ async def get_entry(
     entry = await entry_repository.get_entry_by_id(id_entry)
     return entry
 
+@router.get('/')
+async def get_list_entries(
+    entry_repository: EntryRepository = Depends(get_entry_repository)
+) -> List[Entry]:
+    return await entry_repository.get_all_entries()
 
 @router.put('/{id_entry}')
 async def update_entry(
@@ -36,6 +42,13 @@ async def update_entry(
     entry_repository: EntryRepository = Depends(get_entry_repository)
 ) -> Entry:
     return await entry_repository.update_entry(id_entry, entry)
+
+@router.patch('/{id_entry}')
+async def mark_done(
+    id_entry: int,
+    entry_repository: EntryRepository = Depends(get_entry_repository)
+) -> Entry:
+    return await entry_repository.mark_entry_done(id_entry)
 
 
 @router.delete('/{id_entry}')
